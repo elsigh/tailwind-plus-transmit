@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 import { Container } from '@/components/Container'
 import { EpisodePlayButton } from '@/components/EpisodePlayButton'
@@ -85,14 +88,49 @@ function EpisodeEntry({ episode }: { episode: Episode }) {
   )
 }
 
-export default async function Home() {
-  let episodes = await getAllEpisodes()
+function DelayedBanner() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    // Simulate a slow-loading banner/ad that causes CLS
+    const timer = setTimeout(() => {
+      setShow(true)
+    }, 1500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!show) return null
+
+  return (
+    <div className="bg-gradient-to-r from-pink-500 to-purple-600 py-8 px-6">
+      <Container>
+        <div className="text-white">
+          <h2 className="text-2xl font-bold mb-2">
+            🎉 Special Announcement!
+          </h2>
+          <p className="text-lg">
+            Subscribe now to get exclusive content and early access to new episodes!
+          </p>
+        </div>
+      </Container>
+    </div>
+  )
+}
+
+export default function Home() {
+  const [episodes, setEpisodes] = useState<Episode[]>([])
+
+  useEffect(() => {
+    getAllEpisodes().then(setEpisodes)
+  }, [])
 
   return (
     <div className="pt-16 pb-12 sm:pb-4 lg:pt-12">
       <Container>
         <h1 className="text-2xl/7 font-bold text-slate-900">Episodes</h1>
       </Container>
+      <DelayedBanner />
       <div className="divide-y divide-slate-100 sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
         {episodes.map((episode) => (
           <EpisodeEntry key={episode.id} episode={episode} />
@@ -101,5 +139,3 @@ export default async function Home() {
     </div>
   )
 }
-
-export const revalidate = 10
