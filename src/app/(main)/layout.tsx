@@ -7,6 +7,7 @@ import { AudioProvider } from '@/components/AudioProvider'
 import { AudioPlayer } from '@/components/player/AudioPlayer'
 import { TinyWaveFormIcon } from '@/components/TinyWaveFormIcon'
 import { Waveform } from '@/components/Waveform'
+import { DelayedSidebar } from '@/components/DelayedSidebar'
 import posterImage from '@/images/poster.png'
 
 function SpotifyIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -66,7 +67,7 @@ export default function MainLayout({
 
   return (
     <AudioProvider>
-      <header className="bg-slate-50 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-md lg:items-start lg:overflow-y-auto xl:w-120">
+      <DelayedSidebar>
         <div className="hidden lg:sticky lg:top-0 lg:flex lg:w-16 lg:flex-none lg:items-center lg:px-12 lg:text-sm/7 lg:whitespace-nowrap lg:[writing-mode:vertical-rl]">
           <span className="font-mono text-slate-500">Hosted by</span>
           <span className="mt-6 flex gap-6 font-bold text-slate-900">
@@ -142,7 +143,7 @@ export default function MainLayout({
             </ul>
           </section>
         </div>
-      </header>
+      </DelayedSidebar>
       <main className="border-t border-slate-200 lg:relative lg:mb-28 lg:ml-112 lg:border-t-0 xl:ml-120">
         <Waveform className="absolute top-0 left-0 h-20 w-full" />
         <div className="relative">{children}</div>
