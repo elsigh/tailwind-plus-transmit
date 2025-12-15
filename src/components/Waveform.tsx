@@ -1,4 +1,4 @@
-import { useId } from 'react'
+'use client'
 
 function randomBetween(min: number, max: number, seed = 1) {
   return () => {
@@ -9,7 +9,8 @@ function randomBetween(min: number, max: number, seed = 1) {
 }
 
 export function Waveform(props: React.ComponentPropsWithoutRef<'svg'>) {
-  let id = useId()
+  // Use stable ID to avoid hydration mismatch
+  let id = 'waveform'
   let bars = {
     total: 100,
     width: 2,

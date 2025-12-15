@@ -1,4 +1,6 @@
-import { Fragment } from 'react'
+'use client'
+
+import { Fragment, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,6 +11,34 @@ import { TinyWaveFormIcon } from '@/components/TinyWaveFormIcon'
 import { Waveform } from '@/components/Waveform'
 import { DelayedSidebar } from '@/components/DelayedSidebar'
 import posterImage from '@/images/poster.png'
+
+// MASSIVE CLS at layout level - pushes ENTIRE page down
+function LayoutCLSBlock() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    // 500ms - shift happens faster
+    const timer = setTimeout(() => setShow(true), 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!show) return null
+
+  // 200vh height for EVEN MORE shift
+  return (
+    <div style={{ height: '200vh' }} className="bg-gradient-to-b from-red-600 via-purple-600 to-blue-600 flex flex-col items-center justify-center text-white text-center p-8">
+      <h2 className="text-4xl md:text-5xl font-bold mb-6">🔥 MEGA ANNOUNCEMENT 🔥</h2>
+      <p className="text-xl md:text-2xl mb-4">The biggest podcast event of the year is here!</p>
+      <p className="text-lg md:text-xl mb-6">Subscribe now and get 50% off your first year!</p>
+      <button className="bg-yellow-400 text-gray-900 px-8 py-4 rounded-full font-bold text-xl mb-8">CLAIM YOUR DEAL NOW</button>
+      <div className="mt-8 p-6 bg-white/10 rounded-xl max-w-md">
+        <h3 className="text-2xl font-bold mb-4">📬 Join 50,000+ Listeners</h3>
+        <input type="email" placeholder="Enter your email" className="w-full px-4 py-3 rounded-lg text-gray-900 mb-3" />
+        <button className="w-full bg-yellow-400 text-gray-900 px-6 py-3 rounded-lg font-bold">Subscribe Free</button>
+      </div>
+    </div>
+  )
+}
 
 function SpotifyIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -66,8 +96,10 @@ export default function MainLayout({
   let hosts = ['Eric Gordon', 'Wes Mantooth']
 
   return (
-    <AudioProvider>
-      <DelayedSidebar>
+    <>
+      <LayoutCLSBlock />
+      <AudioProvider>
+        <DelayedSidebar>
         <div className="hidden lg:sticky lg:top-0 lg:flex lg:w-16 lg:flex-none lg:items-center lg:px-12 lg:text-sm/7 lg:whitespace-nowrap lg:[writing-mode:vertical-rl]">
           <span className="font-mono text-slate-500">Hosted by</span>
           <span className="mt-6 flex gap-6 font-bold text-slate-900">
@@ -172,6 +204,7 @@ export default function MainLayout({
       <div className="fixed inset-x-0 bottom-0 z-10 lg:left-112 xl:left-120">
         <AudioPlayer />
       </div>
-    </AudioProvider>
+      </AudioProvider>
+    </>
   )
 }

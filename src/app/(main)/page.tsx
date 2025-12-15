@@ -8,6 +8,37 @@ import { EpisodePlayButton } from '@/components/EpisodePlayButton'
 import { FormattedDate } from '@/components/FormattedDate'
 import { type Episode, getAllEpisodes } from '@/lib/episodes'
 
+// ONE MASSIVE CLS - 100vh tall block appears and pushes ALL content down
+function MassiveCLSBlock() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    // 600ms - content is painted, then BAM - push it all down by 100vh
+    const timer = setTimeout(() => setShow(true), 600)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!show) return null
+
+  // Force 100vh height to guarantee maximum CLS
+  return (
+    <div style={{ minHeight: '100vh' }} className="bg-gradient-to-b from-red-600 via-purple-600 to-blue-600 flex flex-col items-center justify-center text-white text-center p-8">
+      <h2 className="text-5xl font-bold mb-6">🔥 MEGA ANNOUNCEMENT 🔥</h2>
+      <p className="text-2xl mb-4">The biggest podcast event of the year is here!</p>
+      <p className="text-xl mb-4">Subscribe now and get 50% off your first year!</p>
+      <p className="text-lg mb-6">Don't miss out on this incredible limited-time opportunity!</p>
+      <button className="bg-yellow-400 text-gray-900 px-10 py-5 rounded-full font-bold text-2xl mb-8">CLAIM YOUR DEAL NOW</button>
+
+      <div className="mt-8 p-6 bg-white/10 rounded-xl max-w-md">
+        <h3 className="text-2xl font-bold mb-4">📬 Never Miss an Episode!</h3>
+        <p className="mb-4">Join 50,000+ listeners who get exclusive content.</p>
+        <input type="email" placeholder="Enter your email" className="w-full px-4 py-3 rounded-lg text-gray-900 mb-3" />
+        <button className="w-full bg-yellow-400 text-gray-900 px-6 py-3 rounded-lg font-bold">Subscribe Free</button>
+      </div>
+    </div>
+  )
+}
+
 function PauseIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg aria-hidden="true" viewBox="0 0 10 10" {...props}>
@@ -126,15 +157,17 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="pt-16 pb-12 sm:pb-4 lg:pt-12">
-      <Container>
-        <h1 className="text-2xl/7 font-bold text-slate-900">Episodes</h1>
-      </Container>
-      <DelayedBanner />
-      <div className="divide-y divide-slate-100 sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
-        {episodes.map((episode) => (
-          <EpisodeEntry key={episode.id} episode={episode} />
-        ))}
+    <div className="pb-12 sm:pb-4">
+      <div className="pt-16 lg:pt-12">
+        <Container>
+          <h1 className="text-2xl/7 font-bold text-slate-900">Episodes</h1>
+        </Container>
+
+        <div className="divide-y divide-slate-100 sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+          {episodes.map((episode) => (
+            <EpisodeEntry key={episode.id} episode={episode} />
+          ))}
+        </div>
       </div>
     </div>
   )
