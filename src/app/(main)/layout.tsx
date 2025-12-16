@@ -12,7 +12,7 @@ import { Waveform } from '@/components/Waveform'
 import { DelayedSidebar } from '@/components/DelayedSidebar'
 import posterImage from '@/images/poster.png'
 
-// MASSIVE CLS at layout level - pushes ENTIRE page down
+// Fixed CLS issue - reserve space from initial render
 function LayoutCLSBlock() {
   const [show, setShow] = useState(false)
 
@@ -22,11 +22,12 @@ function LayoutCLSBlock() {
     return () => clearTimeout(timer)
   }, [])
 
-  if (!show) return null
-
-  // 200vh height for EVEN MORE shift
+  // Reserve space from initial render using visibility instead of conditional rendering
   return (
-    <div style={{ height: '200vh' }} className="bg-gradient-to-b from-red-600 via-purple-600 to-blue-600 flex flex-col items-center justify-center text-white text-center p-8">
+    <div 
+      style={{ height: '200vh', visibility: show ? 'visible' : 'hidden' }} 
+      className="bg-gradient-to-b from-red-600 via-purple-600 to-blue-600 flex flex-col items-center justify-center text-white text-center p-8"
+    >
       <h2 className="text-4xl md:text-5xl font-bold mb-6">🔥 MEGA ANNOUNCEMENT 🔥</h2>
       <p className="text-xl md:text-2xl mb-4">The biggest podcast event of the year is here!</p>
       <p className="text-lg md:text-xl mb-6">Subscribe now and get 50% off your first year!</p>
